@@ -1,4 +1,4 @@
-FROM swift:4
+FROM swift:4.1
 
 RUN apt-get -qq update && apt-get install -y apt-utils \
   && echo debconf debconf/frontend select Noninteractive | debconf-set-selections \
@@ -20,5 +20,7 @@ WORKDIR /work
 RUN git clone https://github.com/jpsim/SourceKitten.git . && \
     swift build -c release && \
     mv `swift build -c release --show-bin-path` /sourcekitten
+
+WORKDIR /app
 
 ENTRYPOINT /sourcekitten/sourcekitten doc --spm-module $MODULE > $MODULE.docs.json && jazzy -s $MODULE.docs.json
